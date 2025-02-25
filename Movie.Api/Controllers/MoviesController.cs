@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using Movie.Api.Mappings;
 using Movies.Application.Repositories;
 using Movies.Contracts.Requests;
 
 namespace Movie.Api.Controllers;
 
 [ApiController]
-[Route("api")]
 public class MoviesController : ControllerBase
 {
     private readonly IMovieRepository _movieRepository;
@@ -17,20 +17,14 @@ public class MoviesController : ControllerBase
         _logger = logger;
     }
 
-    [HttpPost("movies")]
+    [HttpPost(ApiEndpoints.Movies.Create)]
     public async Task<IActionResult> CreateAsync([FromBody] CreateMovieRequest request)
     {
         _logger.LogInformation("Creating movie ");
-        var movie = new Movies.Application.Models.Movie
-        {
-            Id = Guid.CreateVersion7(),
-            Title = request.Title,
-            YearOfRelease = request.YearOfRelease,
-            Genres = request.Genres.ToList()
-        };
+        var movie = request.MapToMovie();
         
         var result = await _movieRepository.CreateAsync(movie);
         _logger.LogInformation("Finished creating a movie");
-        return Created($"/api/movies/{movie.Id}", movie);
+        return Created($"{ApiEndpoints.Movies.Create}/{movie.Id}", movie);
     }
 }
