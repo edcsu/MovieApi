@@ -9,4 +9,8 @@ public class Movie
     public required int YearOfRelease { get; set; }
 
     public required List<string> Genres { get; init; } = [];
+
+    public DateTime CreatedAt { get; set; }
+    
+    public DateTime? UpdatedAt { get; set; }
 }

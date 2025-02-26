@@ -12,18 +12,27 @@ public static class ContractMapping
             Id = Guid.CreateVersion7(),
             Title = request.Title,
             YearOfRelease = request.YearOfRelease,
-            Genres = request.Genres.ToList()
+            Genres = request.Genres.ToList(),
+            CreatedAt = DateTime.UtcNow
         };
     }
     
-    public static MovieResponse MapToResponse(this Movies.Application.Models.Movie request)
+    public static MovieResponse MapToResponse(this Movies.Application.Models.Movie movie)
     {
         return new MovieResponse
         {
             Id = Guid.CreateVersion7(),
-            Title = request.Title,
-            YearOfRelease = request.YearOfRelease,
-            Genres = request.Genres.ToList()
+            Title = movie.Title,
+            YearOfRelease = movie.YearOfRelease,
+            Genres = movie.Genres.ToList()
+        };
+    }
+    
+    public static MoviesResponses MapToMovieResponse(this IEnumerable<Movies.Application.Models.Movie> movies)
+    {
+        return new MoviesResponses
+        {
+            Items = movies.Select(MapToResponse)
         };
     }
 }

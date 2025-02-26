@@ -31,7 +31,7 @@ public class MoviesController : ControllerBase
     [HttpGet(ApiEndpoints.Movies.Get)]
     public async Task<IActionResult> GetAsync([FromRoute] Guid id)
     {
-        _logger.LogInformation("Getting movie ");
+        _logger.LogInformation("Getting movie");
         var movie = await _movieRepository.GetByIdAsync(id);
 
         if (movie is null)
@@ -39,8 +39,18 @@ public class MoviesController : ControllerBase
             _logger.LogInformation("Movie not found");
             return NotFound();
         }
-        _logger.LogInformation("Finishing getting movie");
+        _logger.LogInformation("Finished getting movie");
         return Ok(movie.MapToResponse());
+    }
+    
+    [HttpGet(ApiEndpoints.Movies.GetAll)]
+    public async Task<IActionResult> GetAllAsync()
+    {
+        _logger.LogInformation("Getting all movies");
+        var movies = await _movieRepository.GetAllAsync();
+
+        _logger.LogInformation("Finished getting all movies");
+        return Ok(movies.MapToMovieResponse());
     }
     
     
