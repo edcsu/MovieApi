@@ -36,7 +36,8 @@ public static class ContractMapping
             Id = Guid.CreateVersion7(),
             Title = movie.Title,
             YearOfRelease = movie.YearOfRelease,
-            Genres = movie.Genres.ToList()
+            Genres = movie.Genres.ToList(),
+            Slug = movie.Slug
         };
     }
     
