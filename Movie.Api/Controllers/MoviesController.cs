@@ -27,4 +27,21 @@ public class MoviesController : ControllerBase
         _logger.LogInformation("Finished creating a movie");
         return Created($"{ApiEndpoints.Movies.Create}/{movie.Id}", movie);
     }
+
+    [HttpGet(ApiEndpoints.Movies.Get)]
+    public async Task<IActionResult> GetAsync([FromRoute] Guid id)
+    {
+        _logger.LogInformation("Getting movie ");
+        var movie = await _movieRepository.GetByIdAsync(id);
+
+        if (movie is null)
+        {
+            _logger.LogInformation("Movie not found");
+            return NotFound();
+        }
+        _logger.LogInformation("Finishing getting movie");
+        return Ok(movie.MapToResponse());
+    }
+    
+    
 }
