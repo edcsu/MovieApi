@@ -17,6 +17,18 @@ public static class ContractMapping
         };
     }
     
+    public static Movies.Application.Models.Movie MapToMovie(this UpdateMovieRequest request, Guid movieId)
+    {
+        return new Movies.Application.Models.Movie
+        {
+            Id = movieId,
+            Title = request.Title,
+            YearOfRelease = request.YearOfRelease,
+            Genres = request.Genres.ToList(),
+            CreatedAt = DateTime.UtcNow
+        };
+    }
+    
     public static MovieResponse MapToResponse(this Movies.Application.Models.Movie movie)
     {
         return new MovieResponse

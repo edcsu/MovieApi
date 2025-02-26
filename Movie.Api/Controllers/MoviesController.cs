@@ -52,6 +52,23 @@ public class MoviesController : ControllerBase
         _logger.LogInformation("Finished getting all movies");
         return Ok(movies.MapToMovieResponse());
     }
-    
-    
+
+    [HttpPut(ApiEndpoints.Movies.Update)]
+    public async Task<IActionResult> UpdateAsync([FromBody] UpdateMovieRequest request, [FromRoute] Guid id)
+    {
+        _logger.LogInformation("Updating movie");
+        var movie = request.MapToMovie(id);
+        var result = await _movieRepository.UpdateAsync(movie);
+
+        if (!result)
+        {
+            _logger.LogInformation("Movie not found with id:{Id}", id);
+            return NotFound();
+        }
+        
+        _logger.LogInformation("Finished updating movie");
+        
+        var response = movie.MapToResponse();
+        return Ok(response);
+    }
 }
