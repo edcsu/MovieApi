@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Movie.Api;
 using Movie.Api.Mappings;
 using Movies.Application;
 using Movies.Application.Database;
@@ -18,7 +19,8 @@ builder.Services.AddApplicationServices();
 
 builder.Services.AddAuthorization(x =>
 {
-    x.AddPolicy("Admin", p => p.RequireClaim("admin", "true"));
+    x.AddPolicy(ApiConstants.AdminUserPolicy, 
+        p => p.RequireClaim(ApiConstants.AdminUserClaim, "true"));
 });
 
 builder.Services.AddAuthentication(x =>

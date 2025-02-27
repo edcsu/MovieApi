@@ -19,7 +19,7 @@ public class MoviesController : ControllerBase
         _logger = logger;
     }
 
-    [Authorize("Admin")]
+    [Authorize(ApiConstants.AdminUserPolicy)]
     [HttpPost(ApiEndpoints.Movies.Create)]
     public async Task<IActionResult> CreateAsync([FromBody] CreateMovieRequest request,
         CancellationToken token = default)
@@ -62,7 +62,7 @@ public class MoviesController : ControllerBase
         return Ok(movies.MapToMovieResponse());
     }
 
-    [Authorize("Admin")]
+    [Authorize(ApiConstants.AdminUserPolicy)]
     [HttpPut(ApiEndpoints.Movies.Update)]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateMovieRequest request, [FromRoute] Guid id,
         CancellationToken token = default)
@@ -83,7 +83,7 @@ public class MoviesController : ControllerBase
         return Ok(response);
     }
 
-    [Authorize("Admin")]
+    [Authorize(ApiConstants.AdminUserPolicy)]
     [HttpDelete(ApiEndpoints.Movies.Delete)]
     public async Task<IActionResult> DeleteAsync([FromRoute] Guid id, CancellationToken token = default)
     {
