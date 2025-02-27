@@ -134,7 +134,9 @@ public class MovieRepository : IMovieRepository
         {
             userId = options.UserId,
             title = options.Title,
-            yearofrelease = options.YearOfRelease
+            yearofrelease = options.YearOfRelease,
+            pageSize = options.PageSize,
+            pageOffset = (options.Page - 1) * options.PageSize
         }, cancellationToken: token));
         
         return result.Select(x => new Movie

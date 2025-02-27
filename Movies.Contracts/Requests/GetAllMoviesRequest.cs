@@ -1,6 +1,6 @@
 namespace Movies.Contracts.Requests;
 
-public record GetAllMoviesRequest
+public record GetAllMoviesRequest : PagedRequest
 {
     public required string? Title { get; init; }
 
