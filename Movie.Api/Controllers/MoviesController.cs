@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Movie.Api.Mappings;
 using Movies.Application.Repositories;
+using Movies.Application.Services;
 using Movies.Contracts.Requests;
 
 namespace Movie.Api.Controllers;
@@ -8,12 +9,12 @@ namespace Movie.Api.Controllers;
 [ApiController]
 public class MoviesController : ControllerBase
 {
-    private readonly IMovieRepository _movieRepository;
+    private readonly IMovieService _movieService;
     private readonly ILogger<MoviesController> _logger;
 
-    public MoviesController(IMovieRepository movieRepository, ILogger<MoviesController> logger)
+    public MoviesController(IMovieService movieService, ILogger<MoviesController> logger)
     {
-        _movieRepository = movieRepository;
+        _movieService = movieService;
         _logger = logger;
     }
 
@@ -23,7 +24,7 @@ public class MoviesController : ControllerBase
         _logger.LogInformation("Creating movie ");
         var movie = request.MapToMovie();
         
-        var result = await _movieRepository.CreateAsync(movie);
+        var result = await _movieService.CreateAsync(movie);
         _logger.LogInformation("Finished creating a movie");
         return Created($"{ApiEndpoints.Movies.Create}/{movie.Id}", movie);
     }
@@ -33,8 +34,8 @@ public class MoviesController : ControllerBase
     {
         _logger.LogInformation("Getting movie");
         var movie = Guid.TryParse(idOrSlug, out var movieId) ?
-         await _movieRepository.GetByIdAsync(movieId) :
-         await _movieRepository.GetBySlugAsync(idOrSlug);
+         await _movieService.GetByIdAsync(movieId) :
+         await _movieService.GetBySlugAsync(idOrSlug);
 
         if (movie is null)
         {
@@ -49,7 +50,7 @@ public class MoviesController : ControllerBase
     public async Task<IActionResult> GetAllAsync()
     {
         _logger.LogInformation("Getting all movies");
-        var movies = await _movieRepository.GetAllAsync();
+        var movies = await _movieService.GetAllAsync();
 
         _logger.LogInformation("Finished getting all movies");
         return Ok(movies.MapToMovieResponse());
@@ -60,9 +61,9 @@ public class MoviesController : ControllerBase
     {
         _logger.LogInformation("Updating movie");
         var movie = request.MapToMovie(id);
-        var result = await _movieRepository.UpdateAsync(movie);
+        var result = await _movieService.UpdateAsync(movie);
 
-        if (!result)
+        if (result is null)
         {
             _logger.LogInformation("Movie not found with id:{Id}", id);
             return NotFound();
@@ -78,7 +79,7 @@ public class MoviesController : ControllerBase
     public async Task<IActionResult> DeleteAsync([FromRoute] Guid id)
     {
         _logger.LogInformation("Deleting movie");
-        var result = await _movieRepository.DeleteByIdAsync(id);
+        var result = await _movieService.DeleteByIdAsync(id);
 
         if (!result)
         {
