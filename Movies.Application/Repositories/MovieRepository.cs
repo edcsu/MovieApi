@@ -113,10 +113,9 @@ public class MovieRepository : IMovieRepository
         using var connection = await _dbConnectionFactory.GetConnectionAsync();
         using var transaction = connection.BeginTransaction();
         
-        var genres = await connection.QueryAsync<string>(
-            new CommandDefinition("""
-                  delete from genres where movieId = @id
-                  """, new { id = movie.Id }));
+        await connection.ExecuteAsync(new CommandDefinition("""
+              delete from genres where movieId = @id
+              """, new { id = movie.Id }));
         
         foreach (var genre in movie.Genres)
         {
