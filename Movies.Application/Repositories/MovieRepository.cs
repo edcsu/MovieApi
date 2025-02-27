@@ -143,7 +143,7 @@ public class MovieRepository : IMovieRepository
             """, new { id }));
         
         var result = await connection.ExecuteAsync(new CommandDefinition("""
-            delete from movies where movieId = @id
+            delete from movies where id = @id
             """, new { id }));
         
         transaction.Commit();
