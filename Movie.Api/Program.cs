@@ -16,6 +16,11 @@ builder.Services.AddControllers();
 
 builder.Services.AddApplicationServices();
 
+builder.Services.AddAuthorization(x =>
+{
+    x.AddPolicy("Admin", p => p.RequireClaim("admin", "true"));
+});
+
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
