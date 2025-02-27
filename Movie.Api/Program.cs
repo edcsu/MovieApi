@@ -1,6 +1,7 @@
 using Movies.Application;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -9,6 +10,9 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 
 builder.Services.AddApplicationServices();
+
+var connectionString = configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDatabase(connectionString);
 
 var app = builder.Build();
 
