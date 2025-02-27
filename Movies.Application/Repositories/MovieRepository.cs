@@ -37,9 +37,30 @@ public class MovieRepository : IMovieRepository
         return result > 0;
     }
 
-    public Task<Movie?> GetByIdAsync(Guid id)
+    public async Task<Movie?> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        using var connection = await _dbConnectionFactory.GetConnectionAsync();
+        var movie = await connection.QueryFirstOrDefaultAsync<Movie>(
+            new CommandDefinition("""
+            select * from movies where id = @id
+            """, new { Id = id}));
+
+        if (movie is null)
+        {
+            return null;
+        }
+
+        var genres = await connection.QueryAsync<string>(
+            new CommandDefinition("""
+            select name from genres where movieId = @id
+            """, new { id }));
+
+        foreach (var genre in genres)
+        {
+            movie.Genres.Add(genre);
+        }
+        
+        return movie;
     }
 
     public Task<Movie?> GetBySlugAsync(string slug)
