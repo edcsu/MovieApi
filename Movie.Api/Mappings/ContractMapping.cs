@@ -12,8 +12,7 @@ public static class ContractMapping
             Id = Guid.CreateVersion7(),
             Title = request.Title,
             YearOfRelease = request.YearOfRelease,
-            Genres = request.Genres.ToList(),
-            CreatedAt = DateTime.UtcNow
+            Genres = request.Genres.ToList()
         };
     }
     
@@ -24,8 +23,7 @@ public static class ContractMapping
             Id = movieId,
             Title = request.Title,
             YearOfRelease = request.YearOfRelease,
-            Genres = request.Genres.ToList(),
-            CreatedAt = DateTime.UtcNow
+            Genres = request.Genres.ToList()
         };
     }
     
@@ -33,7 +31,7 @@ public static class ContractMapping
     {
         return new MovieResponse
         {
-            Id = Guid.CreateVersion7(),
+            Id = movie.Id,
             Title = movie.Title,
             YearOfRelease = movie.YearOfRelease,
             Genres = movie.Genres.ToList(),

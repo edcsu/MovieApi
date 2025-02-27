@@ -12,10 +12,6 @@ public partial class Movie
 
     public required List<string> Genres { get; init; } = [];
 
-    public DateTime CreatedAt { get; set; }
-    
-    public DateTime? UpdatedAt { get; set; }
-
     public string Slug => GenerateSlug();
 
     private string GenerateSlug()
@@ -26,6 +22,6 @@ public partial class Movie
         return $"{sluggedTitle}-{YearOfRelease}";
     }
 
-    [GeneratedRegex("[^a-zA-Z0-9 _-]", RegexOptions.NonBacktracking, 5)]
+    [GeneratedRegex("[^0-9A-Za-z _-]", RegexOptions.NonBacktracking, 5)]
     private static partial Regex SlugRegex();
 }

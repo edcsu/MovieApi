@@ -39,14 +39,14 @@ public class MovieService : IMovieService
     public async Task<Movie?> UpdateAsync(Movie movie, CancellationToken cancellationToken = default)
     {
         await _movieValidator.ValidateAndThrowAsync(movie, cancellationToken);
-        var movieExist = await _movieRepository.ExistsByIdAsync(movie.Id, cancellationToken);
+        var movieExists = await _movieRepository.ExistsByIdAsync(movie.Id, cancellationToken);
 
-        if (movieExist)
+        if (!movieExists)
         {
             return null;
         }
         
-        await _movieRepository.UpdateAsync(movie);  
+        await _movieRepository.UpdateAsync(movie, cancellationToken);  
         return movie;
     }
 
