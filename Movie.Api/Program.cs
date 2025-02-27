@@ -21,6 +21,11 @@ builder.Services.AddAuthorization(x =>
 {
     x.AddPolicy(ApiConstants.AdminUserPolicy, 
         p => p.RequireClaim(ApiConstants.AdminUserClaim, "true"));
+    
+    x.AddPolicy(ApiConstants.TrustedUserPolicy, 
+        p => p.RequireAssertion( a =>
+            a.User.HasClaim(c => c is { Type: ApiConstants.AdminUserClaim, Value: "true" }) ||
+            a.User.HasClaim(c => c is { Type: ApiConstants.TrustedUserClaim, Value: "true" })));
 });
 
 builder.Services.AddAuthentication(x =>
