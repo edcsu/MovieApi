@@ -1,4 +1,5 @@
 using Movies.Application;
+using Movies.Application.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -25,5 +26,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapControllers();
+
+var dbinitializer = app.Services.GetRequiredService<DbInitializer>();
+await dbinitializer.InitializeAsync();
 
 app.Run();
