@@ -101,7 +101,8 @@ public class MovieRepository : IMovieRepository
         return movie;
     }
 
-    public async Task<IEnumerable<Movie>> GetAllAsync(Guid? userId = null, CancellationToken token = default)
+    public async Task<IEnumerable<Movie>> GetAllAsync(GetAllMoviesOptions options,
+        CancellationToken token = default)
     {
         using var connection = await _dbConnectionFactory.GetConnectionAsync(token);
         var result = await connection.QueryAsync(new CommandDefinition("""
@@ -115,7 +116,7 @@ public class MovieRepository : IMovieRepository
             left join ratings myr on m.id = myr.movieid
                 and myr.userid = @userId
             group by id, userrating
-            """, new { userId }, cancellationToken: token));
+            """, new { options.UserId }, cancellationToken: token));
         
         return result.Select(x => new Movie
         {

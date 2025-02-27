@@ -62,7 +62,7 @@ public class MoviesController : ControllerBase
         
         var options = request.MapToOptions()
             .WithUser(userId);
-        var movies = await _movieService.GetAllAsync(userId, token);
+        var movies = await _movieService.GetAllAsync(options, token);
 
         _logger.LogInformation("Finished getting all movies");
         return Ok(movies.MapToMovieResponse());

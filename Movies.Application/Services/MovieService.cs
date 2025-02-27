@@ -35,9 +35,10 @@ public class MovieService : IMovieService
         return _movieRepository.GetBySlugAsync(slug, userId, cancellationToken);
     }
  
-    public Task<IEnumerable<Movie>> GetAllAsync(Guid? userId, CancellationToken cancellationToken = default)
+    public Task<IEnumerable<Movie>> GetAllAsync(GetAllMoviesOptions options,
+        CancellationToken cancellationToken = default)
     {
-        return _movieRepository.GetAllAsync(userId, cancellationToken);
+        return _movieRepository.GetAllAsync(options, cancellationToken);
     }
 
     public async Task<Movie?> UpdateAsync(Movie movie, Guid? userId, CancellationToken cancellationToken = default)
