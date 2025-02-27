@@ -133,9 +133,21 @@ public class MovieRepository : IMovieRepository
         return result > 0;
     }
 
-    public Task<bool> DeleteByIdAsync(Guid id)
+    public async Task<bool> DeleteByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        using var connection = await _dbConnectionFactory.GetConnectionAsync();
+        using var transaction = connection.BeginTransaction();
+
+        await connection.ExecuteAsync(new CommandDefinition("""
+            delete from genres where movieId = @id
+            """, new { id }));
+        
+        var result = await connection.ExecuteAsync(new CommandDefinition("""
+            delete from movies where movieId = @id
+            """, new { id }));
+        
+        transaction.Commit();
+        return result > 0;
     }
 
     public async Task<bool> ExistsByIdAsync(Guid id)
