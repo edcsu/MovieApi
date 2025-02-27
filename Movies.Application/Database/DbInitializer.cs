@@ -16,12 +16,11 @@ public class DbInitializer
         using var connection = await _connectionFactory.GetConnectionAsync();
 
         await connection.ExecuteAsync("""
-              CREATE DATABASE IF NOT EXISTS movies(
+              CREATE TABLE IF NOT EXISTS movies(
               id UUID primary key,
               slug TEXT not null,
               title TEXT not null,
-              yearofrelease integer not null,
-              );
+              yearofrelease integer not null);
         """);
 
         await connection.ExecuteAsync("""
