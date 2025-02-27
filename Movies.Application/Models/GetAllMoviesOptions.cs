@@ -7,4 +7,15 @@ public class GetAllMoviesOptions
     public int? YearOfRelease { get; set; }
     
     public Guid? UserId { get; set; }
+
+    public required string? SortField { get; set; }
+    
+    public required SortOrder? SortOrder { get; set; }
+}
+
+public enum SortOrder
+{
+    Unsorted,
+    Ascending,
+    Descending
 }
