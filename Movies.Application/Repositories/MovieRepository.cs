@@ -63,9 +63,30 @@ public class MovieRepository : IMovieRepository
         return movie;
     }
 
-    public Task<Movie?> GetBySlugAsync(string slug)
+    public async Task<Movie?> GetBySlugAsync(string slug)
     {
-        throw new NotImplementedException();
+        using var connection = await _dbConnectionFactory.GetConnectionAsync();
+        var movie = await connection.QueryFirstOrDefaultAsync<Movie>(
+            new CommandDefinition("""
+            select * from movies where slug = @slug
+            """, new { slug = slug}));
+
+        if (movie is null)
+        {
+            return null;
+        }
+
+        var genres = await connection.QueryAsync<string>(
+            new CommandDefinition("""
+            select name from genres where movieId = @id
+            """, new { id = movie.Id }));
+
+        foreach (var genre in genres)
+        {
+            movie.Genres.Add(genre);
+        }
+        
+        return movie;
     }
 
     public Task<IEnumerable<Movie>> GetAllAsync()
