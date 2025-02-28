@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Movie.Api;
+using Movie.Api.Health;
 using Movie.Api.Mappings;
 using Movie.Api.Swagger;
 using Movies.Application;
@@ -76,6 +77,9 @@ builder.Services.AddApiVersioning(x =>
     x.ReportApiVersions = true;
     x.ApiVersionReader = new MediaTypeApiVersionReader("api-version");
 }).AddMvc().AddApiExplorer();
+
+builder.Services.AddHealthChecks()
+    .AddCheck<DatabaseHealthCheck>(DatabaseHealthCheck.Name);
 
 var connectionString = configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDatabase(connectionString);
