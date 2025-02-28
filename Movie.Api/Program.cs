@@ -48,6 +48,8 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
+builder.Services.AddApiVersioning().AddMvc();
+
 var connectionString = configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDatabase(connectionString);
 
