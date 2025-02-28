@@ -84,7 +84,16 @@ builder.Services.AddHealthChecks()
 var connectionString = configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDatabase(connectionString);
 
-builder.Services.AddResponseCaching();
+// builder.Services.AddResponseCaching();
+builder.Services.AddOutputCache(x =>
+{
+    x.AddBasePolicy(c => c.Cache());
+    x.AddPolicy("MovieCache", c => 
+        c.Cache()
+            .Expire(TimeSpan.FromMinutes(1))
+            .SetVaryByQuery(["title", "year", "sortBy", "page", "pageSize"])
+            .Tag("movies"));
+});
 
 var app = builder.Build();
 
@@ -111,7 +120,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 //app.UseCors();
-app.UseResponseCaching();
+// app.UseResponseCaching();
+app.UseOutputCache();
 
 app.UseMiddleware<ValidationMappingMiddleware>();
 app.MapControllers();

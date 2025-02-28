@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using Movie.Api.Mappings;
 using Movies.Application.Services;
 using Movies.Contracts.Requests;
@@ -14,11 +15,13 @@ public class MoviesController : ControllerBase
 {
     private readonly IMovieService _movieService;
     private readonly ILogger<MoviesController> _logger;
+    private readonly IOutputCacheStore _outputCacheStore;
 
-    public MoviesController(IMovieService movieService, ILogger<MoviesController> logger)
+    public MoviesController(IMovieService movieService, ILogger<MoviesController> logger, IOutputCacheStore outputCacheStore)
     {
         _movieService = movieService;
         _logger = logger;
+        _outputCacheStore = outputCacheStore;
     }
 
     [Authorize(ApiConstants.TrustedUserPolicy)]
@@ -32,6 +35,7 @@ public class MoviesController : ControllerBase
         var movie = request.MapToMovie();
         
         var result = await _movieService.CreateAsync(movie, token);
+        await _outputCacheStore.EvictByTagAsync("movies", token);
         _logger.LogInformation("Finished creating a movie");
         return result ? Created($"{ApiEndpoints.V1.Movies.Create}/{movie.Id}", movie) : BadRequest();
     }
@@ -40,6 +44,7 @@ public class MoviesController : ControllerBase
     [HttpGet(ApiEndpoints.V2.Movies.Get)]
     [ProducesResponseType(typeof(MovieResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [OutputCache(PolicyName = "MovieCache")]
     public async Task<IActionResult> GetAsync([FromRoute] string idOrSlug,
         CancellationToken token = default)
     {
@@ -62,6 +67,7 @@ public class MoviesController : ControllerBase
     [AllowAnonymous]
     [HttpGet(ApiEndpoints.V2.Movies.GetAll)]
     [ProducesResponseType(typeof(MoviesResponse), StatusCodes.Status200OK)]
+    [OutputCache(PolicyName = "MovieCache")]
     public async Task<IActionResult> GetAllAsync([FromQuery] GetAllMoviesRequest request, 
         CancellationToken token = default)
     {
@@ -100,7 +106,8 @@ public class MoviesController : ControllerBase
         }
         
         _logger.LogInformation("Finished updating movie");
-        
+        await _outputCacheStore.EvictByTagAsync("movies", token);
+
         var response = movie.MapToResponse();
         return Ok(response);
     }
@@ -119,6 +126,7 @@ public class MoviesController : ControllerBase
             _logger.LogInformation("Movie not found with id:{Id}", id);
         }
         
+        await _outputCacheStore.EvictByTagAsync("movies", token);
         _logger.LogInformation("Finished deleting movie");
         return Ok();
     }
