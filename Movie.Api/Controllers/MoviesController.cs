@@ -110,6 +110,7 @@ public class MoviesController : ControllerBase
     [HttpDelete(ApiEndpoints.V1.Movies.Delete)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ResponseCache(Duration = 30, VaryByQueryKeys = ["title", "year", "sortBy", "page", "pageSize"], VaryByHeader = "Accept, Accept-Encoding", Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> DeleteAsync([FromRoute] Guid id, CancellationToken token = default)
     {
         _logger.LogInformation("Deleting movie");
