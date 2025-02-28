@@ -6,6 +6,7 @@ public static class RatingEndpointExtensions
     {
         app.MapRateMovie();
         app.MapDeleteRating();
+        app.MapGetUserRatings();
 
         return app;
     }
