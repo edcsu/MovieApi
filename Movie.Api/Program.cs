@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Movie.Api;
+using Movie.Api.Endpoints;
 using Movie.Api.Health;
 using Movie.Api.Mappings;
 using Movie.Api.Swagger;
@@ -129,6 +130,8 @@ app.UseOutputCache();
 
 app.UseMiddleware<ValidationMappingMiddleware>();
 // app.MapControllers();
+
+app.MapApiEndpoints();
 
 var dbinitializer = app.Services.GetRequiredService<DbInitializer>();
 await dbinitializer.InitializeAsync();
