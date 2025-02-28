@@ -11,6 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		compose.yaml = compose.yaml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.Api.Sdk", "Movies.Api.Sdk\Movies.Api.Sdk.csproj", "{982C90F7-F5FD-463B-B1F6-50C186F8ED5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.Api.Sdk.Consumer", "Movies.Api.Sdk.Consumer\Movies.Api.Sdk.Consumer.csproj", "{A80D6FBA-3698-4FC7-9D9D-B4F388523900}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,5 +33,13 @@ Global
 		{3CB6B8C5-BF79-4F8F-9053-A41BC22828EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CB6B8C5-BF79-4F8F-9053-A41BC22828EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CB6B8C5-BF79-4F8F-9053-A41BC22828EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{982C90F7-F5FD-463B-B1F6-50C186F8ED5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{982C90F7-F5FD-463B-B1F6-50C186F8ED5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{982C90F7-F5FD-463B-B1F6-50C186F8ED5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{982C90F7-F5FD-463B-B1F6-50C186F8ED5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A80D6FBA-3698-4FC7-9D9D-B4F388523900}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A80D6FBA-3698-4FC7-9D9D-B4F388523900}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A80D6FBA-3698-4FC7-9D9D-B4F388523900}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A80D6FBA-3698-4FC7-9D9D-B4F388523900}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
