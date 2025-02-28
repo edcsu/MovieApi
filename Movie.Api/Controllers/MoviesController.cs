@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Movie.Api.Mappings;
 using Movies.Application.Services;
 using Movies.Contracts.Requests;
+using Movies.Contracts.Responses;
 
 namespace Movie.Api.Controllers;
 
@@ -22,6 +23,8 @@ public class MoviesController : ControllerBase
 
     [Authorize(ApiConstants.TrustedUserPolicy)]
     [HttpPost(ApiEndpoints.V1.Movies.Create)]
+    [ProducesResponseType(typeof(MovieResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateAsync([FromBody] CreateMovieRequest request,
         CancellationToken token = default)
     {
@@ -35,6 +38,8 @@ public class MoviesController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet(ApiEndpoints.V1.Movies.Get)]
+    [ProducesResponseType(typeof(MovieResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetAsync([FromRoute] string idOrSlug,
         CancellationToken token = default)
     {
@@ -56,6 +61,7 @@ public class MoviesController : ControllerBase
     
     [AllowAnonymous]
     [HttpGet(ApiEndpoints.V1.Movies.GetAll)]
+    [ProducesResponseType(typeof(MoviesResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllAsync([FromQuery] GetAllMoviesRequest request, 
         CancellationToken token = default)
     {
@@ -75,6 +81,9 @@ public class MoviesController : ControllerBase
 
     [Authorize(ApiConstants.TrustedUserPolicy)]
     [HttpPut(ApiEndpoints.V1.Movies.Update)]
+    [ProducesResponseType(typeof(MovieResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateMovieRequest request, [FromRoute] Guid id,
         CancellationToken token = default)
     {
@@ -98,6 +107,8 @@ public class MoviesController : ControllerBase
 
     [Authorize(ApiConstants.AdminUserPolicy)]
     [HttpDelete(ApiEndpoints.V1.Movies.Delete)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteAsync([FromRoute] Guid id, CancellationToken token = default)
     {
         _logger.LogInformation("Deleting movie");
