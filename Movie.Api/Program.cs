@@ -1,12 +1,15 @@
 using System.Text;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Movie.Api;
 using Movie.Api.Mappings;
+using Movie.Api.Swagger;
 using Movies.Application;
 using Movies.Application.Database;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -17,7 +20,6 @@ var configuration = builder.Configuration;
 
 builder.Services.AddControllers();
 
-builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
@@ -32,7 +34,12 @@ builder.Services.AddSwaggerGen(options =>
             Email = "skeith696@gmail.com",
         },
     });
+    
+    options.OperationFilter<SwaggerDefaultValues>();
 });
+
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+builder.Services.AddSwaggerGen(x => x.OperationFilter<SwaggerDefaultValues>());
 
 builder.Services.AddApplicationServices();
 
@@ -83,8 +90,12 @@ if (app.Environment.IsDevelopment())
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
     options.RoutePrefix = string.Empty;
+    foreach (var description in app.DescribeApiVersions())
+    {
+        options.SwaggerEndpoint( $"/swagger/{description.GroupName}/swagger.json",
+            description.GroupName);
+    }
 });
 // app.MapOpenApi(); 
 
