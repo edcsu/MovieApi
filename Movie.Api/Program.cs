@@ -2,6 +2,7 @@ using System.Text;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Movie.Api;
 using Movie.Api.Mappings;
 using Movies.Application;
@@ -12,22 +13,34 @@ var configuration = builder.Configuration;
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+// builder.Services.AddOpenApi();
 
 builder.Services.AddControllers();
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Movies API",
+        Description = "An ASP.NET Core Web API for managing movies",
+        TermsOfService = new Uri("https://example.com/terms"),
+        Contact = new OpenApiContact
+        {
+            Name = "Ssewannonda Keith Edwin",
+            Email = "skeith696@gmail.com",
+        },
+    });
+});
+
 builder.Services.AddApplicationServices();
 
-builder.Services.AddAuthorization(x =>
-{
-    x.AddPolicy(ApiConstants.AdminUserPolicy, 
-        p => p.RequireClaim(ApiConstants.AdminUserClaim, "true"));
-    
-    x.AddPolicy(ApiConstants.TrustedUserPolicy, 
-        p => p.RequireAssertion( a =>
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy(ApiConstants.AdminUserPolicy, p => p.RequireClaim(ApiConstants.AdminUserClaim, "true"))
+    .AddPolicy(ApiConstants.TrustedUserPolicy, p => p.RequireAssertion( a =>
             a.User.HasClaim(c => c is { Type: ApiConstants.AdminUserClaim, Value: "true" }) ||
             a.User.HasClaim(c => c is { Type: ApiConstants.TrustedUserClaim, Value: "true" })));
-});
 
 builder.Services.AddAuthentication(x =>
 {
@@ -49,7 +62,6 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
-
 builder.Services.AddApiVersioning(x =>
 {
     x.DefaultApiVersion = new ApiVersion(1.0);
@@ -66,8 +78,15 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi(); 
 }
+
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    options.RoutePrefix = string.Empty;
+});
+// app.MapOpenApi(); 
 
 app.UseHttpsRedirection();
 
