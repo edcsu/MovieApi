@@ -84,6 +84,8 @@ builder.Services.AddHealthChecks()
 var connectionString = configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDatabase(connectionString);
 
+builder.Services.AddResponseCaching();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -107,6 +109,9 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+//app.UseCors();
+app.UseResponseCaching();
 
 app.UseMiddleware<ValidationMappingMiddleware>();
 app.MapControllers();
