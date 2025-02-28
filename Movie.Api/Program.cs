@@ -17,9 +17,9 @@ var configuration = builder.Configuration;
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-// builder.Services.AddOpenApi();
+builder.Services.AddOpenApi();
 
-builder.Services.AddControllers();
+// builder.Services.AddControllers();
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -116,7 +116,7 @@ app.UseSwaggerUI(options =>
             description.GroupName);
     }
 });
-// app.MapOpenApi(); 
+app.MapOpenApi(); 
 
 app.UseHttpsRedirection();
 
@@ -128,7 +128,7 @@ app.UseAuthorization();
 app.UseOutputCache();
 
 app.UseMiddleware<ValidationMappingMiddleware>();
-app.MapControllers();
+// app.MapControllers();
 
 var dbinitializer = app.Services.GetRequiredService<DbInitializer>();
 await dbinitializer.InitializeAsync();
