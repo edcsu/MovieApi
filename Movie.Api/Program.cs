@@ -104,6 +104,8 @@ builder.Services.AddOutputCache(x =>
 
 var app = builder.Build();
 
+app.CreateApiVersionSet();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -135,7 +137,7 @@ app.UseMiddleware<ValidationMappingMiddleware>();
 
 app.MapApiEndpoints();
 
-var dbinitializer = app.Services.GetRequiredService<DbInitializer>();
-await dbinitializer.InitializeAsync();
+var dbInitializer = app.Services.GetRequiredService<DbInitializer>();
+await dbInitializer.InitializeAsync();
 
 app.Run();
