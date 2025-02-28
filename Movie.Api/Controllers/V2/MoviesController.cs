@@ -24,7 +24,8 @@ public class MoviesController : ControllerBase
         _outputCacheStore = outputCacheStore;
     }
 
-    [Authorize(ApiConstants.TrustedUserPolicy)]
+    // [Authorize(ApiConstants.TrustedUserPolicy)]
+    [ServiceFilter(typeof(ApiKeyAuthFilter))]
     [HttpPost(ApiEndpoints.V2.Movies.Create)]
     [ProducesResponseType(typeof(MovieResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
@@ -85,7 +86,8 @@ public class MoviesController : ControllerBase
         return Ok(moviesResponse);
     }
 
-    [Authorize(ApiConstants.TrustedUserPolicy)]
+    // [Authorize(ApiConstants.TrustedUserPolicy)]
+    [ServiceFilter(typeof(ApiKeyAuthFilter))]
     [HttpPut(ApiEndpoints.V2.Movies.Update)]
     [ProducesResponseType(typeof(MovieResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -112,7 +114,8 @@ public class MoviesController : ControllerBase
         return Ok(response);
     }
 
-    [Authorize(ApiConstants.AdminUserPolicy)]
+    // [Authorize(ApiConstants.AdminUserPolicy)]
+    [ServiceFilter(typeof(ApiKeyAuthFilter))]
     [HttpDelete(ApiEndpoints.V2.Movies.Delete)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

@@ -70,6 +70,8 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
+builder.Services.AddScoped<ApiKeyAuthFilter>();
+
 builder.Services.AddApiVersioning(x =>
 {
     x.DefaultApiVersion = new ApiVersion(1.0);
