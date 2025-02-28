@@ -1,3 +1,4 @@
+using Movies.Application.Models;
 using Movies.Contracts.Requests;
 using Movies.Contracts.Responses;
 
@@ -35,15 +36,53 @@ public static class ContractMapping
             Title = movie.Title,
             YearOfRelease = movie.YearOfRelease,
             Genres = movie.Genres.ToList(),
-            Slug = movie.Slug
+            Slug = movie.Slug,
+            Rating = movie.Rating,
+            UserRating = movie.UserRating,
         };
     }
     
-    public static MoviesResponses MapToMovieResponse(this IEnumerable<Movies.Application.Models.Movie> movies)
+    public static MoviesResponse MapToMovieResponse(this IEnumerable<Movies.Application.Models.Movie> movies,
+        int page, int pageSize, int totalCount)
     {
-        return new MoviesResponses
+        return new MoviesResponse
         {
-            Items = movies.Select(MapToResponse)
+            Items = movies.Select(MapToResponse),
+            Page = page,
+            PageSize = pageSize,
+            Total = totalCount
         };
+    }
+    
+    public static IEnumerable<MovieRatingResponse> MapToResponse(this IEnumerable<MovieRating> ratings)
+    {
+        return ratings.Select(x => new MovieRatingResponse
+        {
+            Rating = x.Rating,
+            Slug = x.Slug,
+            MovieId = x.MovieId
+        });
+    }
+    
+    
+    public static GetAllMoviesOptions MapToOptions(this GetAllMoviesRequest request)
+    {
+        return new GetAllMoviesOptions
+        {
+            Title = request.Title,
+            YearOfRelease = request.Year,
+            SortField = request.SortBy?.Trim('+', '-'),
+            SortOrder = request.SortBy is null ? SortOrder.Unsorted :
+                request.SortBy.StartsWith('-') ? SortOrder.Descending : SortOrder.Ascending,
+            Page = request.Page,
+            PageSize = request.PageSize
+        };
+    }
+
+    public static GetAllMoviesOptions WithUser(this GetAllMoviesOptions options,
+        Guid? userId)
+    {
+        options.UserId = userId;
+        return options;
     }
 }

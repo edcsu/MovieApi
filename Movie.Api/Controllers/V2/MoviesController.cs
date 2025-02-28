@@ -5,10 +5,10 @@ using Movie.Api.Mappings;
 using Movies.Application.Services;
 using Movies.Contracts.Requests;
 
-namespace Movie.Api.Controllers;
+namespace Movie.Api.Controllers.V2;
 
 [ApiController]
-[ApiVersion(1.0)]
+[ApiVersion(2.0)]
 public class MoviesController : ControllerBase
 {
     private readonly IMovieService _movieService;
@@ -21,7 +21,7 @@ public class MoviesController : ControllerBase
     }
 
     [Authorize(ApiConstants.TrustedUserPolicy)]
-    [HttpPost(ApiEndpoints.V1.Movies.Create)]
+    [HttpPost(ApiEndpoints.V2.Movies.Create)]
     public async Task<IActionResult> CreateAsync([FromBody] CreateMovieRequest request,
         CancellationToken token = default)
     {
@@ -34,7 +34,7 @@ public class MoviesController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpGet(ApiEndpoints.V1.Movies.Get)]
+    [HttpGet(ApiEndpoints.V2.Movies.Get)]
     public async Task<IActionResult> GetAsync([FromRoute] string idOrSlug,
         CancellationToken token = default)
     {
@@ -55,7 +55,7 @@ public class MoviesController : ControllerBase
     }
     
     [AllowAnonymous]
-    [HttpGet(ApiEndpoints.V1.Movies.GetAll)]
+    [HttpGet(ApiEndpoints.V2.Movies.GetAll)]
     public async Task<IActionResult> GetAllAsync([FromQuery] GetAllMoviesRequest request, 
         CancellationToken token = default)
     {
@@ -74,7 +74,7 @@ public class MoviesController : ControllerBase
     }
 
     [Authorize(ApiConstants.TrustedUserPolicy)]
-    [HttpPut(ApiEndpoints.V1.Movies.Update)]
+    [HttpPut(ApiEndpoints.V2.Movies.Update)]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateMovieRequest request, [FromRoute] Guid id,
         CancellationToken token = default)
     {
@@ -97,7 +97,7 @@ public class MoviesController : ControllerBase
     }
 
     [Authorize(ApiConstants.AdminUserPolicy)]
-    [HttpDelete(ApiEndpoints.V1.Movies.Delete)]
+    [HttpDelete(ApiEndpoints.V2.Movies.Delete)]
     public async Task<IActionResult> DeleteAsync([FromRoute] Guid id, CancellationToken token = default)
     {
         _logger.LogInformation("Deleting movie");

@@ -1,4 +1,5 @@
 using System.Text;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Movie.Api;
@@ -47,6 +48,15 @@ builder.Services.AddAuthentication(x =>
         ValidAudience = configuration["Jwt:Audience"]!,
     };
 });
+
+
+builder.Services.AddApiVersioning(x =>
+{
+    x.DefaultApiVersion = new ApiVersion(1.0);
+    x.AssumeDefaultVersionWhenUnspecified = true;
+    x.ReportApiVersions = true;
+    x.ApiVersionReader = new MediaTypeApiVersionReader("api-version");
+}).AddMvc().AddApiExplorer();
 
 var connectionString = configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDatabase(connectionString);
