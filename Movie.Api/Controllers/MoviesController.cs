@@ -28,7 +28,7 @@ public class MoviesController : ControllerBase
         
         var result = await _movieService.CreateAsync(movie, token);
         _logger.LogInformation("Finished creating a movie");
-        return Created($"{ApiEndpoints.Movies.Create}/{movie.Id}", movie);
+        return result ? Created($"{ApiEndpoints.Movies.Create}/{movie.Id}", movie) : BadRequest();
     }
 
     [AllowAnonymous]
@@ -65,7 +65,7 @@ public class MoviesController : ControllerBase
         var movies = await _movieService.GetAllAsync(options, token);
         var movieCount = await _movieService.GetCountAsync(options.Title, options.YearOfRelease, token);
 
-        var moviesResponse = movies.MapToResponse(request.Page, request.PageSize, movieCount);
+        var moviesResponse = movies.MapToMovieResponse(request.Page, request.PageSize, movieCount);
 
         _logger.LogInformation("Finished getting all movies");
         return Ok(moviesResponse);
