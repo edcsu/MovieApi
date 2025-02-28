@@ -45,7 +45,9 @@ builder.Services.AddSwaggerGen(x => x.OperationFilter<SwaggerDefaultValues>());
 builder.Services.AddApplicationServices();
 
 builder.Services.AddAuthorizationBuilder()
-    .AddPolicy(ApiConstants.AdminUserPolicy, p => p.RequireClaim(ApiConstants.AdminUserClaim, "true"))
+    // .AddPolicy(ApiConstants.AdminUserPolicy, p => p.RequireClaim(ApiConstants.AdminUserClaim, "true"))
+    .AddPolicy(ApiConstants.AdminUserPolicy,
+    p => p.AddRequirements(new AdminAuthRequirement(configuration["ApiKey"]!)))
     .AddPolicy(ApiConstants.TrustedUserPolicy, p => p.RequireAssertion( a =>
             a.User.HasClaim(c => c is { Type: ApiConstants.AdminUserClaim, Value: "true" }) ||
             a.User.HasClaim(c => c is { Type: ApiConstants.TrustedUserClaim, Value: "true" })));
