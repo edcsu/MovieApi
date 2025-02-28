@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Movie.Api;
+using Movie.Api.Endpoints;
 using Movie.Api.Health;
 using Movie.Api.Mappings;
 using Movie.Api.Swagger;
@@ -17,9 +18,9 @@ var configuration = builder.Configuration;
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-// builder.Services.AddOpenApi();
+builder.Services.AddOpenApi();
 
-builder.Services.AddControllers();
+// builder.Services.AddControllers();
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -80,7 +81,9 @@ builder.Services.AddApiVersioning(x =>
     x.AssumeDefaultVersionWhenUnspecified = true;
     x.ReportApiVersions = true;
     x.ApiVersionReader = new MediaTypeApiVersionReader("api-version");
-}).AddMvc().AddApiExplorer();
+}).AddApiExplorer();
+
+builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddHealthChecks()
     .AddCheck<DatabaseHealthCheck>(DatabaseHealthCheck.Name);
@@ -101,6 +104,8 @@ builder.Services.AddOutputCache(x =>
 
 var app = builder.Build();
 
+app.CreateApiVersionSet();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -116,7 +121,7 @@ app.UseSwaggerUI(options =>
             description.GroupName);
     }
 });
-// app.MapOpenApi(); 
+app.MapOpenApi(); 
 
 app.UseHttpsRedirection();
 
@@ -128,9 +133,11 @@ app.UseAuthorization();
 app.UseOutputCache();
 
 app.UseMiddleware<ValidationMappingMiddleware>();
-app.MapControllers();
+// app.MapControllers();
 
-var dbinitializer = app.Services.GetRequiredService<DbInitializer>();
-await dbinitializer.InitializeAsync();
+app.MapApiEndpoints();
+
+var dbInitializer = app.Services.GetRequiredService<DbInitializer>();
+await dbInitializer.InitializeAsync();
 
 app.Run();
