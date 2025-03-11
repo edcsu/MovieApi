@@ -19,7 +19,8 @@ public static class GetUserRatingsEndpoint
                 })
             .WithName(Name)
             .Produces<MovieRatingResponse>(StatusCodes.Status200OK)
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .HasApiVersion(1.0);
         
         return app;
     }

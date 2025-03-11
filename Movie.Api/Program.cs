@@ -121,7 +121,7 @@ app.UseSwaggerUI(options =>
             description.GroupName);
     }
 });
-app.MapOpenApi(); 
+// app.MapOpenApi(); 
 
 app.UseHttpsRedirection();
 
